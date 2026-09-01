@@ -4,6 +4,9 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Namit Mahajan — React & Next.js Developer',
   description: 'Personal portfolio of Namit Mahajan — building modern web experiences with React and Next.js.',
+  icons: {
+    icon: '/favicon.png',
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
