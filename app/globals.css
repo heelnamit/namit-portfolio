@@ -145,8 +145,17 @@ h2 em {
   color: transparent;
   -webkit-text-stroke: 1px #888;
 }
-h1 span {
+h1 .hero-title-dot {
   color: var(--red);
+}
+.hero-title-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.hero-title-line > span {
+  display: inline-block;
 }
 .hero-sub {
   max-width: 520px;
@@ -325,6 +334,18 @@ h1 span {
 .about h2 span {
   color: var(--red);
 }
+.experience-title-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.experience-title-line:first-child {
+  color: var(--white);
+}
+.experience-title-line > span {
+  display: inline-block;
+}
 .section-note {
   max-width: 330px;
   color: #8c8c8c;
@@ -336,6 +357,47 @@ h1 span {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
+  position: relative;
+}
+.experience-timeline {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -20px;
+  width: 8px;
+  pointer-events: none;
+}
+.experience-timeline-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3px;
+  width: 2px;
+  background: var(--red);
+  transform: scaleY(0);
+  transform-origin: top;
+}
+.experience-timeline i {
+  position: absolute;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--red);
+  border-radius: 50%;
+  background: var(--bg);
+}
+.experience-timeline i:nth-of-type(1) {
+  top: 0;
+}
+.experience-timeline i:nth-of-type(2) {
+  top: 33.333%;
+}
+.experience-timeline i:nth-of-type(3) {
+  top: 66.666%;
+}
+.experience-timeline i:nth-of-type(4) {
+  top: 100%;
+  transform: translateY(-100%);
 }
 .project {
   border: 1px solid var(--line);
@@ -904,5 +966,10 @@ h1 span {
   }
   .footer {
     font-size: 7px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee div {
+    animation: none;
   }
 }

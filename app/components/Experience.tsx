@@ -1,14 +1,61 @@
+'use client';
+
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useLayoutEffect, useRef } from 'react';
+
 export default function Experience() {
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  useLayoutEffect(() => {
+    if (!headingRef.current) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const context = gsap.context(() => {
+      const media = gsap.matchMedia();
+
+      media.add('(prefers-reduced-motion: no-preference)', () => {
+        gsap.fromTo(
+          '.experience-title-line > span',
+          { yPercent: 110, autoAlpha: 0 },
+          {
+            yPercent: 0,
+            autoAlpha: 1,
+            duration: 0.85,
+            ease: 'power4.out',
+            stagger: 0.14,
+            scrollTrigger: {
+              trigger: headingRef.current,
+              start: 'top 82%',
+              once: true,
+            },
+          },
+        );
+      });
+
+      return () => media.revert();
+    }, headingRef);
+
+    return () => context.revert();
+  }, []);
+
   return (
     <section id="work" className="section container">
       <div className="section-head">
         <div>
           <p className="section-kicker">01 / professional journey</p>
 
-          <h2>
-            EXPERIENCE
-            <br />
-            <span>THAT SHAPED HOW I BUILD.</span>
+          <h2
+            ref={headingRef}
+            aria-label="Experience that shaped how I build."
+          >
+            <span className="experience-title-line" aria-hidden="true">
+              <span>EXPERIENCE</span>
+            </span>
+            <span className="experience-title-line" aria-hidden="true">
+              <span>THAT SHAPED HOW I BUILD.</span>
+            </span>
           </h2>
         </div>
 
@@ -20,6 +67,14 @@ export default function Experience() {
       </div>
 
       <div className="project-grid">
+        <div className="experience-timeline" aria-hidden="true">
+          <span className="experience-timeline-line" />
+          <i />
+          <i />
+          <i />
+          <i />
+        </div>
+
         {/* EXPERIENCE 01 */}
         <article className="project project-red">
           <div className="project-top">

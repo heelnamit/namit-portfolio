@@ -6,7 +6,9 @@ import {
   Menu,
   X,
 } from 'lucide-react';
-import { useState } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useLayoutEffect, useRef, useState } from 'react';
 import About from './components/About';
 import Approach from './components/Approach';
 import Contact from './components/Contact';
@@ -15,6 +17,201 @@ import Skills from './components/Skills';
 
 export default function Home() {
   const [open, setOpen] = useState(false);
+  const animationScopeRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    if (!animationScopeRef.current) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+    const scope = animationScopeRef.current;
+
+    const context = gsap.context(() => {
+      const media = gsap.matchMedia();
+
+      media.add('(prefers-reduced-motion: no-preference)', () => {
+        const intro = gsap.timeline({ delay: 0.15 });
+
+        intro
+          .fromTo(
+            '.hero-title-line > span',
+            { yPercent: 110, autoAlpha: 0 },
+            {
+              yPercent: 0,
+              autoAlpha: 1,
+              duration: 0.9,
+              ease: 'power4.out',
+              stagger: 0.14,
+            },
+          )
+          .fromTo(
+            ['.hero-sub', '.actions > *'],
+            { y: 18, autoAlpha: 0 },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.65,
+              ease: 'power3.out',
+              stagger: 0.12,
+            },
+            '-=0.3',
+          )
+          .fromTo(
+            '.code-card',
+            { y: 18, autoAlpha: 0 },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.8,
+              ease: 'power3.out',
+            },
+            '-=0.5',
+          )
+          .fromTo(
+            '.marquee',
+            { y: 12, autoAlpha: 0 },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.7,
+              ease: 'power2.out',
+            },
+            '-=0.15',
+          );
+
+        const revealEachOnScroll = (
+          selector: string,
+          { x = 0, y = 24 }: { x?: number; y?: number } = {},
+        ) => {
+          scope.querySelectorAll<HTMLElement>(selector).forEach((element) => {
+            gsap.fromTo(
+              element,
+              { x, y, autoAlpha: 0 },
+              {
+                x: 0,
+                y: 0,
+                autoAlpha: 1,
+                duration: 0.75,
+                ease: 'power3.out',
+                scrollTrigger: {
+                  trigger: element,
+                  start: 'top 88%',
+                  once: true,
+                },
+              },
+            );
+          });
+        };
+
+        gsap.fromTo(
+          '.experience-timeline-line',
+          { scaleY: 0 },
+          {
+            scaleY: 1,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: '.project-grid',
+              start: 'top 78%',
+              end: 'bottom 55%',
+              scrub: 0.5,
+            },
+          },
+        );
+        revealEachOnScroll('.project-grid > .project', { x: -28 });
+
+        gsap.fromTo(
+          '.skill-grid > .skill',
+          { y: 28, autoAlpha: 0 },
+          {
+            y: 0,
+            autoAlpha: 1,
+            duration: 0.65,
+            ease: 'power3.out',
+            stagger: 0.08,
+            scrollTrigger: {
+              trigger: '.skill-grid',
+              start: 'top 82%',
+              once: true,
+            },
+          },
+        );
+
+        revealEachOnScroll(
+          '.about-copy > p:not(.section-kicker), .about-copy .socials',
+        );
+
+        gsap.fromTo(
+          '.principles-list > div',
+          { y: 24, autoAlpha: 0 },
+          {
+            y: 0,
+            autoAlpha: 1,
+            duration: 0.65,
+            ease: 'power3.out',
+            stagger: 0.14,
+            scrollTrigger: {
+              trigger: '.principles-list',
+              start: 'top 82%',
+              once: true,
+            },
+          },
+        );
+
+        const contact = gsap.timeline({
+          scrollTrigger: {
+            trigger: '.contact',
+            start: 'top 78%',
+            once: true,
+          },
+        });
+
+        contact
+          .fromTo(
+            '.contact-red > .section-kicker, .contact-red h2',
+            { y: 24, autoAlpha: 0 },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.7,
+              ease: 'power3.out',
+              stagger: 0.12,
+            },
+          )
+          .fromTo(
+            '.contact-info > p:not(.replace-note), .contact-info .email, .contact-info .socials',
+            { y: 20, autoAlpha: 0 },
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.6,
+              ease: 'power3.out',
+              stagger: 0.12,
+            },
+            '-=0.35',
+          );
+
+        gsap.fromTo(
+          '.footer > *',
+          { y: 12, autoAlpha: 0 },
+          {
+            y: 0,
+            autoAlpha: 1,
+            duration: 0.55,
+            ease: 'power2.out',
+            stagger: 0.1,
+            scrollTrigger: {
+              trigger: '.footer',
+              start: 'top 94%',
+              once: true,
+            },
+          },
+        );
+      });
+
+      return () => media.revert();
+    }, animationScopeRef);
+
+    return () => context.revert();
+  }, []);
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({
@@ -25,7 +222,7 @@ export default function Home() {
   };
 
   return (
-    <main>
+    <main ref={animationScopeRef}>
       <div className="grain" />
 
       {/* NAVIGATION */}
@@ -73,14 +270,19 @@ export default function Home() {
             Full Stack Developer
           </div>
 
-          <h1>
-            I BUILD
-            <br />
-            <em>DIGITAL</em>
-            <br />
-            PRODUCTS
-            <br />
-            THAT WORK<span>.</span>
+          <h1 aria-label="I BUILD DIGITAL PRODUCTS THAT WORK.">
+            <span className="hero-title-line" aria-hidden="true">
+              <span>I BUILD</span>
+            </span>
+            <span className="hero-title-line" aria-hidden="true">
+              <span><em>DIGITAL</em></span>
+            </span>
+            <span className="hero-title-line" aria-hidden="true">
+              <span>PRODUCTS</span>
+            </span>
+            <span className="hero-title-line" aria-hidden="true">
+              <span>THAT WORK<span className="hero-title-dot">.</span></span>
+            </span>
           </h1>
 
           <p className="hero-sub">
