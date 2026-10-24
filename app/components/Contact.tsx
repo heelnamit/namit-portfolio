@@ -71,11 +71,6 @@ export default function Contact() {
             <ArrowDownToLineIcon />
           </a>
         </div>
-
-        <p className="replace-note">
-          Update the email, GitHub and LinkedIn links with your
-          real details before publishing.
-        </p>
       </div>
     </section>
   );
